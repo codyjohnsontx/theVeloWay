@@ -74,6 +74,10 @@ export default function DashboardPage() {
       });
   }, [filteredComponentHealth, hydrated, isSetupComplete, selectedBikeId, state.stravaConnected]);
 
+  if (!hydrated) {
+    return null;
+  }
+
   if (!state.stravaConnected) {
     return (
       <EmptyState
@@ -163,16 +167,26 @@ export default function DashboardPage() {
           </div>
 
           {/* Components grid */}
-          <div className="grid sm:grid-cols-2 gap-4">
-            {filteredComponentHealth.map((item) => (
-              <ComponentCard
-                key={item.componentId}
-                component={item.component}
-                health={item}
-                preset={item.preset}
-              />
-            ))}
-          </div>
+          {filteredComponentHealth.length === 0 ? (
+            <p
+              role="status"
+              aria-live="polite"
+              className="text-sm text-muted-foreground text-center py-8"
+            >
+              No components match the current bike filter.
+            </p>
+          ) : (
+            <div className="grid sm:grid-cols-2 gap-4">
+              {filteredComponentHealth.map((item) => (
+                <ComponentCard
+                  key={item.componentId}
+                  component={item.component}
+                  health={item}
+                  preset={item.preset}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right rail */}
