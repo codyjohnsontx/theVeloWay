@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HealthMeter } from "@/src/features/cc-component-health/components/HealthMeter";
 import { formatCurrency, formatMiles } from "@/src/features/cc-component-health/lib/formatting";
+import { alertBadgeVariant } from "@/src/features/cc-component-health/lib/alertBadgeVariant";
 import type {
   BikeComponent,
   ComponentPreset,
@@ -17,13 +18,6 @@ interface ComponentCardProps {
   health: ResolvedComponentHealth;
   preset?: ComponentPreset;
 }
-
-const alertBadgeVariant: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  none: "secondary",
-  warning: "outline",
-  critical: "destructive",
-  expired: "destructive"
-};
 
 export function ComponentCard({ component, health, preset }: ComponentCardProps) {
   const metadata = [
@@ -43,7 +37,7 @@ export function ComponentCard({ component, health, preset }: ComponentCardProps)
             <h3 className="font-semibold mt-0.5">{component.label}</h3>
           </div>
           {health.alertLevel !== "none" && (
-            <Badge variant={alertBadgeVariant[health.alertLevel]} className="shrink-0 capitalize">
+            <Badge variant={alertBadgeVariant(health.alertLevel)} className="shrink-0 capitalize">
               {health.alertLevel}
             </Badge>
           )}

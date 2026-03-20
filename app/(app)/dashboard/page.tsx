@@ -11,17 +11,9 @@ import { formatCurrency, formatMiles, formatPercent } from "@/src/features/cc-co
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { alertBadgeVariant } from "@/src/features/cc-component-health/lib/alertBadgeVariant";
 
 const emittedDashboardEvents = new Set<string>();
-
-function alertBadgeVariant(level: "none" | "warning" | "critical" | "expired") {
-  switch (level) {
-    case "warning": return "outline" as const;
-    case "critical": return "destructive" as const;
-    case "expired": return "destructive" as const;
-    default: return "secondary" as const;
-  }
-}
 
 export default function DashboardPage() {
   const { hydrated, dashboardSnapshot, selectBike, state } = useDemoState();
@@ -109,7 +101,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4">
             <p className="text-xs text-muted-foreground">Components due soon</p>

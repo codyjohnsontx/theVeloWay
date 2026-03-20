@@ -28,6 +28,7 @@ function NavLinks({ pathname, alertCount, onClick }: { pathname: string; alertCo
             key={item.href}
             href={item.href}
             onClick={onClick}
+            aria-current={isActive ? "page" : undefined}
             className={`flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors ${
               isActive
                 ? "bg-primary/10 text-primary"
