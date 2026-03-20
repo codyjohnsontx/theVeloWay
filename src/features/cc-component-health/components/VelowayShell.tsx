@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
@@ -49,6 +50,7 @@ function NavLinks({ pathname, alertCount, onClick }: { pathname: string; alertCo
 export function VelowayShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { hydrated, alerts, state, resetDemoState } = useDemoState();
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   if (!hydrated) {
     return (
@@ -67,7 +69,7 @@ export function VelowayShell({ children }: { children: React.ReactNode }) {
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
             {/* Mobile nav trigger */}
-            <Sheet>
+            <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden">
                   <Menu className="h-5 w-5" />
@@ -75,13 +77,13 @@ export function VelowayShell({ children }: { children: React.ReactNode }) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-60 pt-10">
-                <NavLinks pathname={pathname} alertCount={alertCount} />
+                <NavLinks pathname={pathname} alertCount={alertCount} onClick={() => setSheetOpen(false)} />
                 <Separator className="my-4" />
                 <Button
                   variant="ghost"
                   size="sm"
                   className="text-muted-foreground w-full justify-start"
-                  onClick={resetDemoState}
+                  onClick={() => { resetDemoState(); setSheetOpen(false); }}
                 >
                   Restore defaults
                 </Button>

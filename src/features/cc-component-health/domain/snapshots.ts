@@ -231,6 +231,6 @@ export function buildComponentDetailSnapshot(
     health,
     serviceHistory: health?.serviceHistory ?? [],
     affiliateDisclosure:
-      "Prices can change quickly and fit may still need rider verification. Purchases through partner links may earn Strava a commission."
+      "Prices can change quickly and fit may still need rider verification. Purchases through partner links may earn Veloway a commission."
   };
 }

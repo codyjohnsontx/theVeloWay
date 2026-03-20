@@ -80,8 +80,8 @@ export default function DashboardPage() {
       <EmptyState
         title="Ride sync must be active before loading Gear Health."
         description="The dashboard uses bike-tagged ride miles to calculate wear and compare part pricing."
-        primaryHref="/dashboard"
-        primaryLabel="Open landing page"
+        primaryHref="/"
+        primaryLabel="Go to home"
       />
     );
   }
