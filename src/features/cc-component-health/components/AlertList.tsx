@@ -1,82 +1,69 @@
 "use client";
 
 import Link from "next/link";
-
-import {
-  formatCurrency,
-  formatMiles,
-  formatPercent
-} from "@/src/features/cc-component-health/lib/formatting";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { formatCurrency, formatMiles, formatPercent } from "@/src/features/cc-component-health/lib/formatting";
 import type { HealthAlert } from "@/src/features/cc-component-health/types";
-import styles from "@/src/features/cc-component-health/components/feature.module.css";
 
 interface AlertListProps {
   alerts: HealthAlert[];
   onAlertClick: (alert: HealthAlert) => void;
 }
 
-function severityClass(severity: HealthAlert["severity"]) {
+type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
+
+function severityVariant(severity: HealthAlert["severity"]): BadgeVariant {
   switch (severity) {
     case "warning":
-      return styles.pillWarning;
+      return "outline";
     case "critical":
-      return styles.pillCritical;
+      return "destructive";
     case "expired":
-      return styles.pillExpired;
+      return "destructive";
   }
 }
 
 export function AlertList({ alerts, onAlertClick }: AlertListProps) {
   return (
-    <div className={styles.alertGrid}>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {alerts.map((alert) => (
-        <article key={alert.id} className={styles.card}>
-          <div className={styles.cardHeader}>
-            <div>
-              <p className="eyebrow">{alert.bikeName}</p>
-              <h3 className={styles.sectionTitle}>{alert.componentLabel}</h3>
-            </div>
-            <span className={`${styles.pill} ${severityClass(alert.severity)}`}>
-              {alert.severity}
-            </span>
-          </div>
-
-          <p className={styles.sectionText}>
-            Threshold hit at {formatPercent(alert.thresholdTriggered)} remaining life.
-          </p>
-
-          {alert.replacementReason ? (
-            <p className={styles.sectionText}>{alert.replacementReason}</p>
-          ) : null}
-
-          <div className={styles.statRow}>
-            <div className={styles.stat}>
-              <div className={styles.metricLabel}>Remaining miles</div>
-              <div className={styles.statValue}>{formatMiles(alert.remainingMiles)}</div>
-            </div>
-            <div className={styles.stat}>
-              <div className={styles.metricLabel}>Best current price</div>
-              <div className={styles.statValue}>
-                {alert.bestPriceStartingAt !== undefined
-                  ? formatCurrency(alert.bestPriceStartingAt)
-                  : "N/A"}
+        <Card key={alert.id}>
+          <CardHeader className="pb-2">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{alert.bikeName}</p>
+                <h3 className="font-semibold mt-0.5">{alert.componentLabel}</h3>
               </div>
+              <Badge variant={severityVariant(alert.severity)} className="shrink-0 capitalize">
+                {alert.severity}
+              </Badge>
             </div>
-          </div>
-
-          <p className={styles.sectionText}>
-            {formatPercent(alert.remainingPercent)} remaining across{" "}
-            {alert.retailerCount ?? 0} partner retailers.
-          </p>
-
-          <Link
-            className={styles.buttonGhost}
-            href={`/projects/cc-component-health/component/${alert.componentId}`}
-            onClick={() => onAlertClick(alert)}
-          >
-            Review pricing
-          </Link>
-        </article>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge variant="secondary">{formatPercent(alert.remainingPercent)} left</Badge>
+              <span className="text-xs text-muted-foreground">{formatMiles(alert.remainingMiles)} remaining</span>
+            </div>
+            {alert.replacementReason && (
+              <p className="text-sm text-muted-foreground">{alert.replacementReason}</p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Threshold hit at {formatPercent(alert.thresholdTriggered)} remaining life.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {alert.bestPriceStartingAt !== undefined
+                ? `Starting at ${formatCurrency(alert.bestPriceStartingAt)} across ${alert.retailerCount ?? 0} retailers`
+                : "Pricing is still loading for this replacement path"}
+            </p>
+          </CardContent>
+          <CardFooter className="pt-0">
+            <Button asChild variant="outline" size="sm" onClick={() => onAlertClick(alert)}>
+              <Link href={`/component/${alert.componentId}`}>Open component</Link>
+            </Button>
+          </CardFooter>
+        </Card>
       ))}
     </div>
   );

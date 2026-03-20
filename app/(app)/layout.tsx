@@ -1,17 +1,13 @@
-import { FeatureShell } from "@/src/features/cc-component-health/components/FeatureShell";
+import { VelowayShell } from "@/src/features/cc-component-health/components/VelowayShell";
 import { DemoStateProvider } from "@/src/features/cc-component-health/context/DemoStateProvider";
 import { getFeatureBootstrap } from "@/src/features/cc-component-health/server/queries/getGearHealthSnapshots";
 
-export default async function ComponentHealthLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const initialBootstrap = await getFeatureBootstrap();
 
   return (
     <DemoStateProvider initialBootstrap={initialBootstrap}>
-      <FeatureShell>{children}</FeatureShell>
+      <VelowayShell>{children}</VelowayShell>
     </DemoStateProvider>
   );
 }

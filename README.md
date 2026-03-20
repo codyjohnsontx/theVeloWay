@@ -76,8 +76,8 @@ This repo implements the web MVP path of the concept.
 
 ### Current user experience
 
-- Gear Health landing page with account summary, urgent replacement preview, and alert queue
-- Dashboard with bike filtering, wear state summaries, and prioritized components
+- Gear Health landing page with account snapshot, a maintenance-first attention list, and a service queue
+- Dashboard with bike filtering, service-readiness summaries, prioritized components, and a secondary replacement-cost snapshot
 - Component detail page with:
   - remaining life chart
   - replacement rationale
@@ -87,7 +87,7 @@ This repo implements the web MVP path of the concept.
   - service history
   - affiliate click tracking
 - Alerts view for replace-soon parts
-- Setup flow for bikes, tracked components, and starter-kit presets
+- Setup flow for bikes, tracked components, and starter-kit presets with guided maintenance-oriented copy
 - Replace action that resets lifecycle and appends service history
 
 ### Current routes

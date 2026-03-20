@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Strava Gear Health",
+  title: "Veloway — Bike Component Health",
   description:
-    "Bike-tagged ride history translated into component wear tracking and retailer price comparison."
+    "Know exactly when to replace your bike components. Ride-attributed wear tracking and retailer price comparison."
 };
 
 export default function RootLayout({
@@ -13,8 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
   );
 }

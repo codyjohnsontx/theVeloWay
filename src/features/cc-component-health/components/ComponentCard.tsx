@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { HealthMeter } from "@/src/features/cc-component-health/components/HealthMeter";
 import { formatCurrency, formatMiles } from "@/src/features/cc-component-health/lib/formatting";
+import { alertBadgeVariant } from "@/src/features/cc-component-health/lib/alertBadgeVariant";
 import type {
   BikeComponent,
   ComponentPreset,
   ResolvedComponentHealth
 } from "@/src/features/cc-component-health/types";
-import styles from "@/src/features/cc-component-health/components/feature.module.css";
 
 interface ComponentCardProps {
   component: BikeComponent;
@@ -17,11 +19,7 @@ interface ComponentCardProps {
   preset?: ComponentPreset;
 }
 
-export function ComponentCard({
-  component,
-  health,
-  preset
-}: ComponentCardProps) {
+export function ComponentCard({ component, health, preset }: ComponentCardProps) {
   const metadata = [
     `Service life ${formatMiles(component.serviceLifeMiles)}`,
     component.position
@@ -31,48 +29,43 @@ export function ComponentCard({
   ].filter(Boolean) as string[];
 
   return (
-    <article className={styles.card}>
-      <div className={`${styles.cardHeader} ${styles.componentCardHeader}`}>
-        <div>
-          <p className="eyebrow">{health.bikeName}</p>
-          <h3 className={styles.sectionTitle}>{component.label}</h3>
-        </div>
-      </div>
-
-      <HealthMeter
-        remainingPercent={health.remainingPercent}
-        remainingMiles={health.remainingMiles}
-        alertLevel={health.alertLevel}
-        label={component.label}
-      />
-
-      <div className={styles.statRow}>
-        <div className={styles.stat}>
-          <div className={styles.metricLabel}>Best current price</div>
-          <div className={styles.statValue}>
-            {health.bestPriceOffer ? formatCurrency(health.bestPriceOffer.price) : "N/A"}
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{health.bikeName}</p>
+            <h3 className="font-semibold mt-0.5">{component.label}</h3>
           </div>
+          {health.alertLevel !== "none" && (
+            <Badge variant={alertBadgeVariant(health.alertLevel)} className="shrink-0 capitalize">
+              {health.alertLevel}
+            </Badge>
+          )}
         </div>
-        <div className={styles.stat}>
-          <div className={styles.metricLabel}>Retailers tracked</div>
-          <div className={styles.statValue}>{health.offerSummary.retailerCount}</div>
-        </div>
-      </div>
-
-      <p className={styles.componentMetaText}>{metadata.join(" · ")}</p>
-      <p className={styles.sectionText}>{health.replacementReason}</p>
-
-      <div className={styles.cardFooter}>
-        <Link
-          href={`/projects/cc-component-health/component/${component.id}`}
-          className={styles.buttonGhost}
-        >
-          Compare retailers
-        </Link>
-        <span className={styles.muted}>
-          {preset?.replacementCategoryLabel ?? "Replacement part"} pricing
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <HealthMeter
+          remainingPercent={health.remainingPercent}
+          remainingMiles={health.remainingMiles}
+          alertLevel={health.alertLevel}
+          label={component.label}
+        />
+        <p className="text-sm text-muted-foreground">{health.replacementReason}</p>
+        <p className="text-xs text-muted-foreground">{metadata.join(" · ")}</p>
+        <p className="text-xs text-muted-foreground">
+          {health.bestPriceOffer
+            ? `Best current price ${formatCurrency(health.bestPriceOffer.price)} across ${health.offerSummary.retailerCount} retailers`
+            : "Retailer comparison will appear here when pricing is available"}
+        </p>
+      </CardContent>
+      <CardFooter className="flex items-center justify-between pt-0">
+        <Button asChild variant="outline" size="sm">
+          <Link href={`/component/${component.id}`}>Review component</Link>
+        </Button>
+        <span className="text-xs text-muted-foreground">
+          {preset?.replacementCategoryLabel ?? "Replacement part"} comparison
         </span>
-      </div>
-    </article>
+      </CardFooter>
+    </Card>
   );
 }

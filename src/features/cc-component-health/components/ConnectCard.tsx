@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-
-import styles from "@/src/features/cc-component-health/components/feature.module.css";
+import { Link as LinkIcon } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface ConnectCardProps {
   athleteName: string;
@@ -24,50 +26,52 @@ export function ConnectCard({
   primaryHref
 }: ConnectCardProps) {
   return (
-    <section className={`${styles.panel} ${styles.connectCard}`}>
-      <div className={styles.cardHeader}>
-        <div>
-          <p className="eyebrow">{connected ? "Account" : "Ride sync"}</p>
-          <h2 className={styles.sectionTitle}>
-            {connected ? athleteName : "Connect ride history"}
-          </h2>
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              {connected ? "Account" : "Ride sync"}
+            </p>
+            <h2 className="font-semibold mt-0.5">
+              {connected ? athleteName : "Connect ride history"}
+            </h2>
+          </div>
+          <Badge variant="secondary" className="shrink-0">{modeLabel}</Badge>
         </div>
-        <span className={styles.statusBadge}>{modeLabel}</span>
-      </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          {connected
+            ? `${activityCount} tagged rides are flowing into Gear Health for bike-aware service tracking.`
+            : "Connect ride history to start bike-aware wear tracking and retailer comparison."}
+        </p>
 
-      <p className={styles.sectionText}>
-        {connected
-          ? `${activityCount} tagged rides are flowing into Gear Health for bike-aware service tracking.`
-          : "Connect ride history to start bike-aware wear tracking and retailer comparison."}
-      </p>
-
-      <div className={styles.statRow}>
-        <div className={styles.stat}>
-          <div className={styles.metricLabel}>Activities ready</div>
-          <div className={styles.statValue}>{activityCount}</div>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">Activities ready</span>
+          <span className="font-semibold">{activityCount}</span>
         </div>
-      </div>
 
-      <div className={styles.connectActions}>
-        {!connected ? (
-          <button
-            className={`${styles.button} ${connectDisabled ? styles.buttonDisabled : ""}`}
-            disabled={connectDisabled}
-            type="button"
-            onClick={onConnect}
-          >
-            Connect rides
-          </button>
-        ) : (
-          <Link className={styles.button} href={primaryHref}>
-            Open dashboard
-          </Link>
-        )}
-
-        <Link className={styles.buttonGhost} href="/projects/cc-component-health/setup">
-          Manage bikes
-        </Link>
-      </div>
-    </section>
+        <div className="flex items-center gap-2">
+          {!connected ? (
+            <Button
+              disabled={connectDisabled}
+              onClick={onConnect}
+              className="gap-2"
+            >
+              <LinkIcon className="h-4 w-4" />
+              Connect Strava account
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link href={primaryHref}>Open dashboard</Link>
+            </Button>
+          )}
+          <Button asChild variant="outline" size="sm">
+            <Link href="/setup">Manage bikes</Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

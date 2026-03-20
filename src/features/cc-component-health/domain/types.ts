@@ -286,6 +286,7 @@ export interface LandingSnapshot extends GearHealthSnapshot {
 export interface DashboardSnapshot extends GearHealthSnapshot {
   dueSoonCount: number;
   spendAtRisk: number;
+  pricedUrgentCount: number;
   priorityItems: ResolvedComponentHealth[];
 }
 

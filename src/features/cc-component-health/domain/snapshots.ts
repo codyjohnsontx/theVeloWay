@@ -181,11 +181,13 @@ export function buildDashboardSnapshot(
   bikeId = bootstrap.state.selectedBikeId
 ): DashboardSnapshot {
   const snapshot = buildGearHealthSnapshot(bootstrap, bikeId);
-  const dueSoonCount = snapshot.filteredComponentHealth.filter(
+  const dueSoonItems = snapshot.filteredComponentHealth.filter(
     (item) => item.alertLevel !== "none"
-  ).length;
-  const spendAtRisk = snapshot.filteredComponentHealth
-    .filter((item) => item.alertLevel !== "none" && item.bestPriceOffer)
+  );
+  const dueSoonCount = dueSoonItems.length;
+  const pricedUrgentCount = dueSoonItems.filter((item) => item.bestPriceOffer).length;
+  const spendAtRisk = dueSoonItems
+    .filter((item) => item.bestPriceOffer)
     .reduce((sum, item) => sum + (item.bestPriceOffer?.price ?? 0), 0);
   const priorityItems = [...snapshot.filteredComponentHealth]
     .sort((left, right) => left.remainingPercent - right.remainingPercent)
@@ -195,6 +197,7 @@ export function buildDashboardSnapshot(
     ...snapshot,
     dueSoonCount,
     spendAtRisk,
+    pricedUrgentCount,
     priorityItems
   };
 }
@@ -228,6 +231,6 @@ export function buildComponentDetailSnapshot(
     health,
     serviceHistory: health?.serviceHistory ?? [],
     affiliateDisclosure:
-      "Prices can change quickly. Purchases through partner links may earn Strava a commission."
+      "Prices can change quickly and fit may still need rider verification. Purchases through partner links may earn Veloway a commission."
   };
 }
