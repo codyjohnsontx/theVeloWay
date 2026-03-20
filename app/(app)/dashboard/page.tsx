@@ -39,6 +39,7 @@ export default function DashboardPage() {
   }, [bikes.length, hydrated, selectBike, selectedBikeId]);
 
   useEffect(() => {
+    if (!hydrated || !hasInitializedBikeFilter.current) return;
     const key = "dashboard_viewed";
     if (emittedDashboardEvents.has(key)) return;
     emittedDashboardEvents.add(key);
@@ -47,9 +48,10 @@ export default function DashboardPage() {
       activeAlerts: filteredAlerts.length,
       bikeId: selectedBikeId
     });
-  }, [filteredAlerts.length, filteredComponentHealth.length, selectedBikeId]);
+  }, [filteredAlerts.length, filteredComponentHealth.length, hydrated, selectedBikeId]);
 
   useEffect(() => {
+    if (!hydrated || !hasInitializedBikeFilter.current) return;
     filteredComponentHealth
       .filter((item) => item.bestPriceOffer)
       .forEach((item) => {
@@ -65,7 +67,7 @@ export default function DashboardPage() {
           remainingPercent: item.remainingPercent
         });
       });
-  }, [filteredComponentHealth, selectedBikeId]);
+  }, [filteredComponentHealth, hydrated, selectedBikeId]);
 
   if (!state.stravaConnected) {
     return (
@@ -127,6 +129,8 @@ export default function DashboardPage() {
           {/* Bike filter tabs */}
           <div className="flex flex-wrap gap-2">
             <button
+              type="button"
+              aria-pressed={selectedBikeId === "all"}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 selectedBikeId === "all"
                   ? "bg-primary text-primary-foreground"
@@ -139,6 +143,8 @@ export default function DashboardPage() {
             {bikes.map((bike) => (
               <button
                 key={bike.id}
+                type="button"
+                aria-pressed={selectedBikeId === bike.id}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   selectedBikeId === bike.id
                     ? "bg-primary text-primary-foreground"

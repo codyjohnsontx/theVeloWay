@@ -1,4 +1,5 @@
-type AlertLevel = "none" | "warning" | "critical" | "expired";
+import type { AlertLevel } from "@/src/features/cc-component-health/domain/types";
+
 type BadgeVariant = "default" | "secondary" | "destructive" | "outline";
 
 export function alertBadgeVariant(level: AlertLevel): BadgeVariant {
