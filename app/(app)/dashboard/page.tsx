@@ -34,12 +34,16 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!hydrated || hasInitializedBikeFilter.current) return;
-    hasInitializedBikeFilter.current = true;
-    if (bikes.length > 1 && selectedBikeId !== "all") selectBike("all");
+    if (bikes.length > 1 && selectedBikeId !== "all") {
+      selectBike("all");
+    } else {
+      hasInitializedBikeFilter.current = true;
+    }
   }, [bikes.length, hydrated, selectBike, selectedBikeId]);
 
   useEffect(() => {
     if (!hydrated || !hasInitializedBikeFilter.current) return;
+    if (!state.stravaConnected || !isSetupComplete) return;
     const key = "dashboard_viewed";
     if (emittedDashboardEvents.has(key)) return;
     emittedDashboardEvents.add(key);
@@ -48,10 +52,11 @@ export default function DashboardPage() {
       activeAlerts: filteredAlerts.length,
       bikeId: selectedBikeId
     });
-  }, [filteredAlerts.length, filteredComponentHealth.length, hydrated, selectedBikeId]);
+  }, [filteredAlerts.length, filteredComponentHealth.length, hydrated, isSetupComplete, selectedBikeId, state.stravaConnected]);
 
   useEffect(() => {
     if (!hydrated || !hasInitializedBikeFilter.current) return;
+    if (!state.stravaConnected || !isSetupComplete) return;
     filteredComponentHealth
       .filter((item) => item.bestPriceOffer)
       .forEach((item) => {
@@ -67,7 +72,7 @@ export default function DashboardPage() {
           remainingPercent: item.remainingPercent
         });
       });
-  }, [filteredComponentHealth, hydrated, selectedBikeId]);
+  }, [filteredComponentHealth, hydrated, isSetupComplete, selectedBikeId, state.stravaConnected]);
 
   if (!state.stravaConnected) {
     return (
@@ -188,6 +193,9 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-2">
+              {priorityItems.length === 0 && (
+                <p className="text-xs text-muted-foreground">No priority items right now.</p>
+              )}
               {priorityItems.map((item) => (
                 <Link
                   key={item.componentId}
