@@ -3,7 +3,6 @@
 import { buildSvgPath } from "@/src/features/cc-component-health/lib/chartSeries";
 import { formatDate, formatMiles } from "@/src/features/cc-component-health/lib/formatting";
 import type { CountdownPoint } from "@/src/features/cc-component-health/types";
-import styles from "@/src/features/cc-component-health/components/feature.module.css";
 
 interface CountdownSparklineProps {
   points: CountdownPoint[];
@@ -21,31 +20,29 @@ export function CountdownSparkline({
   const path = buildSvgPath(points, width, height);
   const lastPoint = points[points.length - 1];
   const maxY = Math.max(...points.map((point) => point.remainingMiles), 1);
-  const lastPointY = lastPoint
-    ? height - (lastPoint.remainingMiles / maxY) * height
-    : height - 1;
+  const lastPointY = lastPoint ? height - (lastPoint.remainingMiles / maxY) * height : height - 1;
 
   return (
-    <div>
+    <div className="space-y-1">
       <svg
-        className={styles.sparkline}
         viewBox={`0 0 ${width} ${height}`}
         role="img"
         aria-label="Remaining component life over time"
+        className="w-full"
       >
         <line
           x1="0"
           y1={height - 1}
           x2={width}
           y2={height - 1}
-          stroke="rgba(95,108,95,0.18)"
+          stroke="hsl(var(--border))"
           strokeWidth="1"
         />
         <path
           d={path}
           fill="none"
-          stroke="var(--accent)"
-          strokeWidth="3"
+          stroke="hsl(var(--primary))"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -54,17 +51,17 @@ export function CountdownSparkline({
             cx={width}
             cy={Math.max(4, lastPointY)}
             r="4"
-            fill="var(--accent)"
+            fill="hsl(var(--primary))"
           />
         ) : null}
       </svg>
 
-      {showAxes && points.length > 0 ? (
-        <div className={styles.sparklineLabels}>
+      {showAxes && points.length > 0 && (
+        <div className="flex justify-between text-xs text-muted-foreground">
           <span>{formatDate(points[0].date)}</span>
           <span>{formatMiles(points[points.length - 1].remainingMiles)}</span>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
