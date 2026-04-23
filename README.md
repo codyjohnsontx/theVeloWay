@@ -92,21 +92,21 @@ This repo implements the web MVP path of the concept.
 
 ### Current routes
 
-- `/projects/cc-component-health`
-- `/projects/cc-component-health/setup`
-- `/projects/cc-component-health/dashboard`
-- `/projects/cc-component-health/component/[id]`
-- `/projects/cc-component-health/alerts`
+- `/`
+- `/dashboard`
+- `/setup`
+- `/component/[id]`
+- `/alerts`
 
 ### Suggested review flow
 
 1. Open `/projects/cc-component-health`
 2. Review the seeded account and current replacement opportunities
-3. Open `/projects/cc-component-health/dashboard`
+3. Open `/dashboard`
 4. Filter between bikes and inspect replace-soon items
 5. Open a component detail page and compare retailer offers
-6. Visit `/projects/cc-component-health/alerts`
-7. Use `/projects/cc-component-health/setup` to edit bikes and installs
+6. Visit `/alerts`
+7. Use `/setup` to edit bikes and installs
 
 ## MVP Scope Alignment
 
@@ -381,11 +381,14 @@ pnpm test:e2e
 pnpm build
 ```
 
+If Clerk keys are not configured, the app runs in local demo mode and the dashboard routes stay publicly accessible.
+
 ## Project Structure
 
 ```text
 app/
-  projects/cc-component-health/
+  (marketing)/
+  (app)/
   api/projects/cc-component-health/
 src/
   features/cc-component-health/

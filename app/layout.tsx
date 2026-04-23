@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+import { isClerkConfigured } from "@/src/lib/clerk";
 
 export const metadata: Metadata = {
   title: "Veloway — Bike Component Health",
@@ -13,11 +14,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const authEnabled = isClerkConfigured();
+  const document = (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+
+  if (!authEnabled) {
+    return document;
+  }
+
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>{children}</body>
-      </html>
+      {document}
     </ClerkProvider>
   );
 }
