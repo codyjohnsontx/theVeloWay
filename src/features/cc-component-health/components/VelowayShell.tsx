@@ -48,7 +48,13 @@ function NavLinks({ pathname, alertCount, onClick }: { pathname: string; alertCo
   );
 }
 
-export function VelowayShell({ children }: { children: React.ReactNode }) {
+export function VelowayShell({
+  children,
+  authEnabled
+}: {
+  children: React.ReactNode;
+  authEnabled: boolean;
+}) {
   const pathname = usePathname();
   const { hydrated, alerts, state, resetDemoState } = useDemoState();
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -104,7 +110,13 @@ export function VelowayShell({ children }: { children: React.ReactNode }) {
                 </Badge>
               </Link>
             )}
-            <UserButton />
+            {authEnabled ? (
+              <UserButton />
+            ) : (
+              <Badge variant="secondary" className="text-xs uppercase tracking-wide">
+                Demo mode
+              </Badge>
+            )}
           </div>
         </div>
       </header>
@@ -116,6 +128,7 @@ export function VelowayShell({ children }: { children: React.ReactNode }) {
           <Separator />
           <div className="text-xs text-muted-foreground space-y-1 px-1">
             <p className="font-medium text-foreground">{state.athleteName}</p>
+            {!authEnabled && <p>Authentication disabled for local demo mode.</p>}
           </div>
           <Button
             variant="ghost"

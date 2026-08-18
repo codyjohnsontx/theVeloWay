@@ -2,8 +2,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { isClerkConfigured } from "@/src/lib/clerk";
 
 export default function LandingPage() {
+  const authEnabled = isClerkConfigured();
+  const primaryHref = authEnabled ? "/sign-up" : "/dashboard";
+  const primaryLabel = authEnabled ? "Get Started Free" : "Open demo";
+
   return (
     <div className="flex flex-col">
       {/* Hero */}
@@ -19,12 +24,17 @@ export default function LandingPage() {
           </p>
           <div className="flex items-center justify-center gap-3 pt-2">
             <Button asChild size="lg">
-              <Link href="/sign-up">Get Started Free</Link>
+              <Link href={primaryHref}>{primaryLabel}</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link href="/pricing">See pricing</Link>
             </Button>
           </div>
+          {!authEnabled && (
+            <p className="text-sm text-muted-foreground">
+              Local demo mode is active because Clerk auth keys are not configured.
+            </p>
+          )}
         </div>
       </section>
 
@@ -96,7 +106,9 @@ export default function LandingPage() {
             component health dashboard is live.
           </p>
           <Button asChild variant="secondary" size="lg">
-            <Link href="/pricing">View plans</Link>
+            <Link href={authEnabled ? "/pricing" : "/dashboard"}>
+              {authEnabled ? "View plans" : "Open dashboard"}
+            </Link>
           </Button>
         </div>
       </section>
